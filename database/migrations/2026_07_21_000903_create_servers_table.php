@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string("port")->nullable()->default("22");
             $table->string("username")->nullable()->default("root");
             $table->string("password");
+            $table->string("api_key")->unique()->nullable();
             $table->timestamps();
         });
     }
