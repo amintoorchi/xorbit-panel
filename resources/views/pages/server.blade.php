@@ -25,7 +25,7 @@
         </flux:navbar>
     </flux:header>
 
-    <div class="mt-6 px-8 py-4 max-w-screen-xl m-auto mt-18">
+    <div class="mt-6 px-8 py-4 max-w-screen-xl m-auto mt-13">
         @switch($tab)
             @case('overview')
 
@@ -37,12 +37,20 @@
                             <flux:heading size="xl">{{ $server->name }}</flux:heading>
 
                             <flux:text class="mt-1 text-zinc-500">
-                                {{ $server->host }}:{{ $server->port }}
+                                {{ $server->host }} :
                             </flux:text>
                         </div>
 
-                        <flux:badge color="green">
-                            Online
+                        @php
+                            $statusColor = match ($server->status) {
+                                'paired' => 'green',
+                                'pending' => 'amber',
+                                'offline' => 'red',
+                                default => 'zinc',
+                            };
+                        @endphp
+                        <flux:badge :color="$statusColor">
+                            {{ ucfirst($server->status) }}
                         </flux:badge>
                     </div>
 
@@ -53,7 +61,11 @@
                             <flux:text>CPU Usage</flux:text>
 
                             <flux:heading size="xl" class="mt-2">
-                                14%
+                                @if($server->status === 'pending')
+                                    <span class="text-zinc-400 dark:text-zinc-600 text-[22px]">Unavalble</span>
+                                @else
+                                    14%
+                                @endif
                             </flux:heading>
                         </div>
 
@@ -61,7 +73,11 @@
                             <flux:text>Memory</flux:text>
 
                             <flux:heading size="xl" class="mt-2">
-                                2.4 / 8 GB
+                                @if($server->status === 'pending')
+                                    <span class="text-zinc-400 dark:text-zinc-600 text-[22px]">Unavalble</span>
+                                @else
+                                    2.4 / 8 GB
+                                @endif
                             </flux:heading>
                         </div>
 
@@ -69,7 +85,11 @@
                             <flux:text>Disk</flux:text>
 
                             <flux:heading size="xl" class="mt-2">
-                                48 / 120 GB
+                                @if($server->status === 'pending')
+                                    <span class="text-zinc-400 dark:text-zinc-600 text-[22px]">Unavalble</span>
+                                @else
+                                    48 / 120 GB
+                                @endif
                             </flux:heading>
                         </div>
 
@@ -77,7 +97,11 @@
                             <flux:text>Uptime</flux:text>
 
                             <flux:heading size="xl" class="mt-2">
-                                8 Days
+                                @if($server->status === 'pending')
+                                    <span class="text-zinc-400 dark:text-zinc-600 text-[22px]">Unavalble</span>
+                                @else
+                                    8 Days
+                                @endif
                             </flux:heading>
                         </div>
 
@@ -106,21 +130,43 @@
 
                             <div>
                                 <flux:text class="text-zinc-500">
-                                    SSH Port
+                                    Paired At
                                 </flux:text>
 
                                 <p class="mt-1 font-medium">
-                                    {{ $server->port }}
+                                    @if($server->paired_at)
+                                        {{ $server->paired_at->diffForHumans() }}
+                                    @else
+                                        <span class="text-zinc-400 dark:text-zinc-600 font-normal">Not paired yet</span>
+                                    @endif
                                 </p>
                             </div>
 
                             <div>
                                 <flux:text class="text-zinc-500">
-                                    Username
+                                    Last Seen At
                                 </flux:text>
 
                                 <p class="mt-1 font-medium">
-                                    {{ $server->username }}
+                                    @if($server->last_seen_at)
+                                        {{ $server->last_seen_at->diffForHumans() }}
+                                    @else
+                                        <span class="text-zinc-400 dark:text-zinc-600 font-normal">Never</span>
+                                    @endif
+                                </p>
+                            </div>
+
+                            <div>
+                                <flux:text class="text-zinc-500">
+                                    Agent Version
+                                </flux:text>
+
+                                <p class="mt-1 font-medium">
+                                    @if($server->agent_version)
+                                        {{ $server->agent_version }}
+                                    @else
+                                        <span class="text-zinc-400 dark:text-zinc-600 font-normal">Not connected</span>
+                                    @endif
                                 </p>
                             </div>
 
@@ -133,11 +179,8 @@
                                     {{ $server->created_at->diffForHumans() }}
                                 </p>
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
 
             @break

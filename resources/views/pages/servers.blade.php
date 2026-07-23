@@ -15,9 +15,13 @@
 
                 <flux:input wire:model.blur="name" label="Server Name" placeholder="Production Server" />
                 <flux:input wire:model.blur="host" label="Host" placeholder="192.168.1.10" />
-                <flux:input wire:model.blur="username" label="SSH Username" placeholder="root" />
-                <flux:input wire:model.blur="port" type="number" label="SSH Port" placeholder="22" />
+                {{--
+                <flux:input wire:model.blur="username" label="SSH Username" placeholder="root" /> --}}
+                {{--
+                <flux:input wire:model.blur="port" type="number" label="SSH Port" placeholder="22" /> --}}
+                {{--
                 <flux:input wire:model.blur="password" type="password" label="Password" placeholder="••••••••••••" />
+                --}}
 
                 <div class="flex justify-end gap-2 pt-2">
                     <flux:modal.close>
@@ -40,7 +44,7 @@
             </form>
         </flux:modal>
 
-        <flux:modal name="show-credential" class="md:w-2xl">
+        <flux:modal name="show-credential" class="w-sm md:w-3xl">
             @if($createdServer)
                 <div class="space-y-5">
                     <div class="flex items-center gap-3">
@@ -54,14 +58,14 @@
                     </div>
 
                     <div x-data="{
-                        copied: false,
-                        command: {{ Js::from('curl -fsSL https://raw.githubusercontent.com/amintoorchi/xorbit-agent/main/install.sh | sudo bash -s ' . $createdServer->token) }},
-                        copy() {
-                            navigator.clipboard.writeText(this.command);
-                            this.copied = true;
-                            setTimeout(() => this.copied = false, 2000);
-                        }
-                    }" class="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-lg">
+                                copied: false,
+                                command: {{ Js::from('curl -fsSL https://raw.githubusercontent.com/amintoorchi/xorbit-agent/main/install.sh | sudo bash -s ' . $createdServer->token) }},
+                                copy() {
+                                    navigator.clipboard.writeText(this.command);
+                                    this.copied = true;
+                                    setTimeout(() => this.copied = false, 2000);
+                                }
+                            }" class="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-lg">
                         <div class="flex items-center justify-between border-b border-zinc-800 bg-zinc-900 px-4 py-2.5">
                             <div class="flex items-center gap-2">
                                 <span class="size-2.5 rounded-full bg-red-500/80"></span>
@@ -165,65 +169,90 @@
 
 
 
-        <div class="mt-20">
+        <div class="mt-10">
             <flux:modal.trigger name="add-server">
                 <flux:button>New Server</flux:button>
             </flux:modal.trigger>
         </div>
 
-        <div class="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 px-7 py-4 mt-5">
-            <div class="overflow-x-auto">
-                <flux:table class="min-w-full m-auto ">
+        <div
+            class="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 px-4 py-4 mt-5 sm:px-7">
 
-                    <flux:table.columns>
-                        <flux:table.column>Name</flux:table.column>
-                        <flux:table.column>Username</flux:table.column>
-                        <flux:table.column>Host</flux:table.column>
-                        <flux:table.column>Port</flux:table.column>
-                        <flux:table.column align="center">
-                            Manage
-                        </flux:table.column>
-                    </flux:table.columns>
+            @if ($this->servers->count() > 0)
 
-                    <flux:table.rows>
-                        @foreach ($this->servers as $server)
-                            <flux:table.row :key="$server->id">
+                <div class="overflow-x-auto">
+                    <flux:table class="min-w-full m-auto">
 
-                                <flux:table.cell class="flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-5 shrink-0">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M21.75 17.25v-.228a4.5 4.5 0 0 0-.12-1.03l-2.268-9.64a3.375 3.375 0 0 0-3.285-2.602H7.923a3.375 3.375 0 0 0-3.285 2.602l-2.268 9.64a4.5 4.5 0 0 0-.12 1.03v.228m19.5 0a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3m19.5 0a3 3 0 0 0-3-3H5.25a3 3 0 0 0-3 3m16.5 0h.008v.008h-.008v-.008Zm-3 0h.008v.008h-.008v-.008Z" />
-                                    </svg>
+                        <flux:table.columns>
+                            <flux:table.column>Name</flux:table.column>
+                            <flux:table.column>Status</flux:table.column>
+                            <flux:table.column align="center">Manage</flux:table.column>
+                        </flux:table.columns>
 
-                                    <span class="whitespace-nowrap">
-                                        {{ $server->name }}
-                                    </span>
-                                </flux:table.cell>
+                        <flux:table.rows>
+                            @foreach ($this->servers as $server)
+                                @php
+                                    $statusColor = match ($server->status) {
+                                        'paired' => 'green',
+                                        'pending' => 'amber',
+                                        'offline' => 'red',
+                                        default => 'zinc',
+                                    };
+                                @endphp
+                                <flux:table.row :key="$server->id">
 
-                                <flux:table.cell class="whitespace-nowrap">
-                                    {{ $server->username }}
-                                </flux:table.cell>
+                                    <flux:table.cell class="flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-5 shrink-0">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M21.75 17.25v-.228a4.5 4.5 0 0 0-.12-1.03l-2.268-9.64a3.375 3.375 0 0 0-3.285-2.602H7.923a3.375 3.375 0 0 0-3.285 2.602l-2.268 9.64a4.5 4.5 0 0 0-.12 1.03v.228m19.5 0a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3m19.5 0a3 3 0 0 0-3-3H5.25a3 3 0 0 0-3 3m16.5 0h.008v.008h-.008v-.008Zm-3 0h.008v.008h-.008v-.008Z" />
+                                        </svg>
+                                        <span class="whitespace-nowrap font-mono">{{ $server->name }}</span>
+                                    </flux:table.cell>
 
-                                <flux:table.cell class="whitespace-nowrap">
-                                    {{ $server->host }}
-                                </flux:table.cell>
+                                    <flux:table.cell class="whitespace-nowrap">
+                                        <flux:badge size="sm" :color="$statusColor">
+                                            {{ ucfirst($server->status) }}
+                                        </flux:badge>
+                                    </flux:table.cell>
 
-                                <flux:table.cell class="whitespace-nowrap">
-                                    {{ $server->port }}
-                                </flux:table.cell>
+                                    <flux:table.cell align="center">
+                                        <flux:button icon="adjustments-horizontal" square size="sm" tooltip="Manage server"
+                                            href="{{ route('server', $server->id) }}" wire:navigate />
+                                    </flux:table.cell>
 
-                                <flux:table.cell align="center">
-                                    <flux:button icon="adjustments-horizontal" square size="sm" tooltip="Manage server"
-                                        href="{{ route('server', $server->id) }}" wire:navigate />
-                                </flux:table.cell>
+                                </flux:table.row>
+                            @endforeach
+                        </flux:table.rows>
 
-                            </flux:table.row>
-                        @endforeach
-                    </flux:table.rows>
+                    </flux:table>
+                </div>
 
-                </flux:table>
-            </div>
+            @else
+
+                {{-- Empty state --}}
+                <div class="flex flex-col items-center justify-center gap-4 py-16 text-center">
+                    <div
+                        class="flex h-14 w-14 items-center justify-center rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700">
+                        <flux:icon.server-stack class="size-6 text-zinc-400 dark:text-zinc-600" />
+                    </div>
+
+                    <div class="space-y-1">
+                        <flux:heading size="md">No servers yet</flux:heading>
+                        <flux:text class="text-zinc-500">
+                            Add your first server to start managing it from here.
+                        </flux:text>
+                    </div>
+
+                    <flux:modal.trigger name="add-server">
+                        <flux:button icon="plus" variant="primary" size="sm">
+                            Add Server
+                        </flux:button>
+                    </flux:modal.trigger>
+                </div>
+
+            @endif
+
         </div>
 
     </div>
