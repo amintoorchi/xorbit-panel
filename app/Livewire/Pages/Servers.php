@@ -22,7 +22,7 @@ class Servers extends Component
 
     public string $password = '';
 
-    public string $api_key = '';
+    public string $token = '';
 
     public ?Server $createdServer = null;
 
@@ -47,7 +47,7 @@ class Servers extends Component
             'password' => ['required', 'string'],
         ]);
 
-        $validated['api_key'] = 'xorbit_'.Str::random(32);
+        $validated['token'] = 'xorbit_'.Str::random(32);
 
         $this->createdServer = Server::create($validated);
 

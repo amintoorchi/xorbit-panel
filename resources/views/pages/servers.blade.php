@@ -55,7 +55,7 @@
 
                     <div x-data="{
                         copied: false,
-                        command: {{ Js::from('curl -fsSL https://raw.githubusercontent.com/amintoorchi/xorbit-agent/main/install.sh | sudo bash -s ' . $createdServer->api_key) }},
+                        command: {{ Js::from('curl -fsSL https://raw.githubusercontent.com/amintoorchi/xorbit-agent/main/install.sh | sudo bash -s ' . $createdServer->token) }},
                         copy() {
                             navigator.clipboard.writeText(this.command);
                             this.copied = true;
@@ -89,7 +89,7 @@
 
                         <div class="px-4 py-4">
                             <pre
-                                class="whitespace-pre-wrap break-all font-mono text-[13px] leading-relaxed text-zinc-300"><span class="text-emerald-400">$</span> curl -fsSL https://raw.githubusercontent.com/amintoorchi/xorbit-agent/main/install.sh | sudo bash -s <span class="text-sky-400">{{ $createdServer->api_key }}</span></pre>
+                                class="whitespace-pre-wrap break-all font-mono text-[13px] leading-relaxed text-zinc-300"><span class="text-emerald-400">$</span> curl -fsSL https://raw.githubusercontent.com/amintoorchi/xorbit-agent/main/install.sh | sudo bash -s <span class="text-sky-400">{{ $createdServer->token }}</span></pre>
                         </div>
                     </div>
 

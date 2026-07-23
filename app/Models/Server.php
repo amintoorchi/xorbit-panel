@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'host', 'port', 'username', 'password', 'api_key'])]
+#[Fillable(['name', 'host', 'port', 'username', 'password', 'token'])]
 #[Hidden(['password'])]
 class Server extends Model
 {
@@ -17,7 +17,6 @@ class Server extends Model
     {
         return [
             'password' => 'encrypted',
-            // 'api_key' => 'hashed',
         ];
     }
 }
