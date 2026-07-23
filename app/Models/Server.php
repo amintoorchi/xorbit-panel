@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 
-#[Fillable(['name', 'host', 'port', 'username', 'password'])]
+#[Fillable(['name', 'host', 'port', 'username', 'password','api_key'])]
 #[Hidden(['password'])]
 class Server extends Model
 {
@@ -16,6 +16,7 @@ class Server extends Model
     {
         return [
             'password' => 'encrypted',
+            // 'api_key' => 'hashed',
         ];
     }
 }
