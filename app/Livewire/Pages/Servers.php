@@ -16,11 +16,11 @@ class Servers extends Component
 
     public string $host = '';
 
-    public string $username = '';
+    // public string $username = '';
 
-    public int $port;
+    // public int $port;
 
-    public string $password = '';
+    // public string $password = '';
 
     public string $token = '';
 
@@ -31,9 +31,9 @@ class Servers extends Component
         $this->reset([
             'name',
             'host',
-            'username',
-            'port',
-            'password',
+            // 'username',
+            // 'port',
+            // 'password',
         ]);
     }
 
@@ -42,9 +42,9 @@ class Servers extends Component
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'host' => ['required', 'ip', 'unique:servers,host'],
-            'username' => ['required', 'string', 'max:255'],
-            'port' => ['required', 'integer', 'between:1,65535'],
-            'password' => ['required', 'string'],
+            // 'username' => ['required', 'string', 'max:255'],
+            // 'port' => ['required', 'integer', 'between:1,65535'],
+            // 'password' => ['required', 'string'],
         ]);
 
         $validated['token'] = 'xorbit_'.Str::random(32);
