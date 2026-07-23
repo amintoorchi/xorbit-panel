@@ -5,7 +5,7 @@
         <flux:separator variant="subtle" />
 
 
-        <flux:modal name="add-server" flyout variant="floating" class="md:w-lg" wire:close="resetForm">
+        <flux:modal name="add-server" flyout variant="floating" class="md:w-md" wire:close="resetForm">
             <form wire:submit="save" class="space-y-6">
 
                 <div>
