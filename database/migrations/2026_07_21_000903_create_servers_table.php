@@ -15,11 +15,14 @@ return new class extends Migration
             $table->uuid('id');
             $table->string('name');
             $table->string('host')->unique();
-            $table->string('port')->nullable()->default('22');
-            $table->string('username')->nullable()->default('root');
-            $table->string('password');
+            // $table->string('port')->nullable()->default('22');
+            // $table->string('username')->nullable()->default('root');
+            // $table->string('password');
             $table->string('token')->unique()->nullable();
             $table->enum('status', ['pending', 'paired'])->default('pending');
+            $table->timestamp('paired_at')->nullable();
+            $table->timestamp('last_seen_at')->nullable();
+            $table->string('agent_version')->nullable();
             $table->timestamps();
         });
     }
