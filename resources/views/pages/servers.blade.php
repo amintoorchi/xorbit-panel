@@ -39,6 +39,70 @@
 
             </form>
         </flux:modal>
+
+        <flux:modal name="show-credential" class="md:w-2xl">
+            @if($createdServer)
+                <div class="space-y-5">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-900 dark:bg-zinc-800">
+                            <flux:icon.server class="size-5 text-emerald-400" />
+                        </div>
+                        <div>
+                            <flux:heading size="lg">{{ $createdServer->name }}</flux:heading>
+                            <flux:subheading>Run this command on your server to connect the agent</flux:subheading>
+                        </div>
+                    </div>
+
+                    <div x-data="{
+                        copied: false,
+                        command: {{ Js::from('curl -fsSL https://raw.githubusercontent.com/amintoorchi/xorbit-agent/main/install.sh | sudo bash -s ' . $createdServer->api_key) }},
+                        copy() {
+                            navigator.clipboard.writeText(this.command);
+                            this.copied = true;
+                            setTimeout(() => this.copied = false, 2000);
+                        }
+                    }" class="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-lg">
+                        <div class="flex items-center justify-between border-b border-zinc-800 bg-zinc-900 px-4 py-2.5">
+                            <div class="flex items-center gap-2">
+                                <span class="size-2.5 rounded-full bg-red-500/80"></span>
+                                <span class="size-2.5 rounded-full bg-yellow-500/80"></span>
+                                <span class="size-2.5 rounded-full bg-green-500/80"></span>
+                                <span class="ml-2 font-mono text-xs text-zinc-500">bash</span>
+                            </div>
+
+                            <button @click="copy()"
+                                class="flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-xs text-zinc-400 transition hover:bg-zinc-800 hover:text-zinc-200">
+                                <template x-if="!copied">
+                                    <span class="flex items-center gap-1.5">
+                                        <flux:icon.clipboard class="size-3.5" />
+                                        Copy
+                                    </span>
+                                </template>
+                                <template x-if="copied">
+                                    <span class="flex items-center gap-1.5 text-emerald-400">
+                                        <flux:icon.check class="size-3.5" />
+                                        Copied
+                                    </span>
+                                </template>
+                            </button>
+                        </div>
+
+                        <div class="px-4 py-4">
+                            <pre
+                                class="whitespace-pre-wrap break-all font-mono text-[13px] leading-relaxed text-zinc-300"><span class="text-emerald-400">$</span> curl -fsSL https://raw.githubusercontent.com/amintoorchi/xorbit-agent/main/install.sh | sudo bash -s <span class="text-sky-400">{{ $createdServer->api_key }}</span></pre>
+                        </div>
+                    </div>
+
+                    <flux:text size="sm" class="text-red-500">
+                        This key will only be shown once. Please save it securely.
+                    </flux:text>
+                    <flux:text size="sm" class="text-zinc-500">
+                        This key is unique to this server. Keep it private.
+                    </flux:text>
+                </div>
+            @endif
+        </flux:modal>
+
     </div>
 
     {{-- <x-partials.head :title='headerr' /> --}}
