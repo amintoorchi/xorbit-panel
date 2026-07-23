@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('servers', function (Blueprint $table) {
             $table->uuid('id');
-            $table->string("name");
-            $table->string("host")->unique();
-            $table->string("port")->nullable()->default("22");
-            $table->string("username")->nullable()->default("root");
-            $table->string("password");
-            $table->string("api_key")->unique()->nullable();
+            $table->string('name');
+            $table->string('host')->unique();
+            $table->string('port')->nullable()->default('22');
+            $table->string('username')->nullable()->default('root');
+            $table->string('password');
+            $table->string('api_key')->unique()->nullable();
             $table->timestamps();
         });
     }

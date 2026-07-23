@@ -13,14 +13,18 @@ use Livewire\Component;
 class Servers extends Component
 {
     public string $name = '';
+
     public string $host = '';
+
     public string $username = '';
+
     public int $port;
+
     public string $password = '';
+
     public string $api_key = '';
 
     public ?Server $createdServer = null;
-
 
     public function resetForm(): void
     {
@@ -43,7 +47,7 @@ class Servers extends Component
             'password' => ['required', 'string'],
         ]);
 
-        $validated['api_key'] = 'xorbit_' . Str::random(32);
+        $validated['api_key'] = 'xorbit_'.Str::random(32);
 
         $this->createdServer = Server::create($validated);
 
@@ -57,10 +61,8 @@ class Servers extends Component
             variant: 'success',
         );
 
-
         Flux::modal('show-credential')->show();
     }
-
 
     #[Computed]
     public function servers()
