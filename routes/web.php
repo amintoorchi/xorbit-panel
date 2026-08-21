@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgentTestController;
 use App\Http\Controllers\ServerController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,3 +17,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/s', [ServerController::class, 'index']);
 
 require __DIR__.'/settings.php';
+
+
+Route::get('/at', [AgentTestController::class, 'test1']);
+Route::get('/at2', [AgentTestController::class, 'test2']);
+Route::get('/at2', [AgentTestController::class, 'test3']);

@@ -174,6 +174,7 @@
                 <flux:button>New Server</flux:button>
             </flux:modal.trigger>
         </div>
+        
 
         <div
             class="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 px-4 py-4 mt-5 sm:px-7">
